@@ -1,7 +1,7 @@
 # example/views.py
 from datetime import datetime
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from rest_framework.response import Response
 
@@ -19,4 +19,4 @@ from rest_framework.response import Response
 
 def index(request):
     now = datetime.now()  
-    return Response({"time":str(now)})
+    return JsonResponse({"time":str(now)})
