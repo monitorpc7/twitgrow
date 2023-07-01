@@ -4,6 +4,7 @@ from datetime import datetime
 from django.http import HttpResponse, JsonResponse
 
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 # def index(request):
 #     now = datetime.now()
@@ -17,6 +18,7 @@ from rest_framework.response import Response
 #     '''
 #     return HttpResponse(html)
 
+@api_view(['POST', 'GET'])
 def index(request):
     now = datetime.now()  
     return Response({"time":str(now)})
