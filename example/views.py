@@ -19,12 +19,4 @@ from rest_framework.response import Response
 
 def index(request):
     now = datetime.now()  
-    html = f'''
-        <html>
-        <body>
-            <h1>Hello from Vercel!</h1>
-            <p>Here is a reply.</p>
-        </body>
-    </html>
-    '''
-    return HttpResponse(html)
+    return Response({"time":str(now)})
