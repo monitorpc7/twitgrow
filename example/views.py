@@ -110,6 +110,54 @@ def quoted_retweet_gen(request):
 
 @api_view(['POST', 'GET'])
 def tweet_rewrite(request):
-    now = datetime.now()  
-    return Response({"time":str(now)})
+    sign = Login(email, passwd)
+    cookies = sign.login()
+    
+    tweet = request.data['tweet']    
+    print(tweet)    
+    
+    tweet = '''
+    {}
+    '''.format(tweet)
+
+    # Create a ChatBot
+    chatbot = hugchat.ChatBot(cookies=cookies.get_dict())  # or cookie_path="usercookies/<email>.json"
+    result = chatbot.chat('''rewrite with the engaging indentations for the following tweet present after "Tweet :". 
+    For easy processing and consistency, format your response as a JSON object with key "tweet" which has to have the rewritten version 
+    of the given tweet and in that json also include a key called "tone" that has the tone of this tweet. the format of the json 
+    response should the one present after "Format :".
+
+        Format: 
+        {
+        'tweet': [rewritten tweet],
+        'tone':[tone of the tweet]
+        }    
+
+        Tweet :'''+tweet)
+
+    try:
+        reply = json.loads(result)
+        reply =reply['tweet']
+    except Exception as e:
+        try:
+            firstValue = result.index("{")
+            lastValue = len(result) - \
+                result[::-1].index("}")
+            jsonString = result[firstValue:lastValue]
+
+            reply = json.loads(jsonString)
+            reply =reply['tweet']
+        except Exception as e:
+            
+            reply = result
+    try:
+        reply = json.loads(reply)
+        result =reply['tweet']
+    except Exception as e:
+        result = reply
+
+    print(result)
+
+    return Response({"tweet":str(result)})
+
 
