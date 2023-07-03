@@ -30,24 +30,53 @@ def tweet_gen(request):
     sign = Login(email, passwd)
     cookies = sign.login()
     
-    tweet = request.POST.get('tweet')
-    tone = request.POST.get('tone')
-
-    tweet = '''
+    topic = request.data['topic']
+    tone = request.data['tone']
+    print(topic+"-"+tone)
+    topic = '''
     {}
-    '''.format(tweet)
+    '''.format(topic)
 
     # Create a ChatBot
     chatbot = hugchat.ChatBot(cookies=cookies.get_dict())  # or cookie_path="usercookies/<email>.json"
-    result = chatbot.chat('''generate a {} and more human like 20-word reply for the following tweet present after "Tweet :". reply has to be in the  format given below without any additional text.
-        Reply Format :
-        reply: [reply]   
+    result = chatbot.chat("generate a engaging and more human like maximum 200-word tweet with emoji and indentations on each line for the following topic present after 'Topic :' for the tone " +tone+'''. 
+            For easy processing and consistency, format your response as a JSON object with key "tweet" which has to have the generated 
+        tweet on the given topic and in that json also include a key called "tone" that has the tone of that generated tweet. the format of the json 
+        response should the one present after "Format :".
 
-        Tweet : {}
-    '''.format(tone,tweet))
+            Format: 
+            {
+            'tweet': [tweet],
+            'tone':[tone of the tweet]
+            }    
+        
+
+            Topic : '''+topic)
+
+    try:
+        reply = json.loads(result)
+        reply =reply['tweet']
+    except Exception as e:
+        try:
+            firstValue = result.index("{")
+            lastValue = len(result) - \
+                result[::-1].index("}")
+            jsonString = result[firstValue:lastValue]
+
+            reply = json.loads(jsonString)
+            reply =reply['tweet']
+        except Exception as e:
+            
+            reply = result
+    try:
+        reply = json.loads(reply)
+        result =reply['tweet']
+    except Exception as e:
+        result = reply
+
     print(result)
 
-    return Response({"reply":str(result)})
+    return Response({"tweet":str(result)})
 
 @api_view(['POST', 'GET'])
 def thread_gen(request):
