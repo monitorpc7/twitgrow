@@ -143,11 +143,12 @@ def thread_gen(request):
 
 @api_view(['POST', 'GET'])
 def reply_gen(request):
-    sign = Login(email, passwd)
-    cookies = sign.login()
+    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    bard = Bard(token=token)    
     
     tweet = request.data['tweet']
     tone = request.data['tone']
+
     print(tweet)
     print(tone)
     
@@ -155,16 +156,13 @@ def reply_gen(request):
     {}
     '''.format(tweet)
 
-    # Create a ChatBot
-    chatbot = hugchat.ChatBot(cookies=cookies.get_dict())  # or cookie_path="usercookies/<email>.json"
-    result = chatbot.chat('''generate a {} and more human like 20-word reply with emoji to express emotions if possible  for the following tweet present after "Tweet :". 
+    prompt  = '''generate a {} and more human like 30-word reply  with emoji to express emotions if possible  for the following tweet present after "Tweet :". 
     For easy processing and consistency, format your response as a JSON object with "reply" and the content of each as the keys has to be the reply.
-   
-           
 
-        Tweet : {}
-    '''.format(tone,tweet))
-
+    Tweet : {}
+    '''.format(tone,tweet)
+    result = bard.get_answer(prompt)['content']
+    #print(result)
     try:
         reply = json.loads(result)
         reply =reply['reply']
@@ -185,7 +183,7 @@ def reply_gen(request):
         result =reply['reply']
     except Exception as e:
         result = reply
-    
+
     print(result)
 
     return Response({"reply":str(result)})
