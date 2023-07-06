@@ -9,6 +9,8 @@ from rest_framework.decorators import api_view
 
 from hugchat import hugchat
 from hugchat.login import Login
+from bardapi import Bard
+
 
 def index(request):
     now = datetime.now()
@@ -80,8 +82,64 @@ def tweet_gen(request):
 
 @api_view(['POST', 'GET'])
 def thread_gen(request):
-    now = datetime.now()  
-    return Response({"time":str(now)})
+    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    bard = Bard(token=token)
+    
+    topic = request.data['topic']
+    tone = request.data['tone']
+    print(topic+"-"+tone)
+    topic = '''
+    {}
+    '''.format(topic)
+
+    initial = '''
+    I want you to act like an experienced social media expert with the ability to
+        write highly captivating Twitter threads that people would love reading furthur. I want you to help me write a Twitter
+        thread about this topic: {} . 
+    '''.format(topic)
+
+
+    prompt = initial+'''. 
+        
+        For easy processing and consistency, format your response as a JSON object with key "thread" which has to have the generated 
+        tweet on the given topic.   
+
+        the format of the json response should the one present after "Format :".
+
+                Format: 
+                {
+                'thread': [thread],
+                'tone':[tone of the tweet]
+                }           
+
+
+            '''
+    result = bard.get_answer(prompt)['content']
+
+    try:
+        reply = json.loads(result)
+        reply =reply['thread']
+    except Exception as e:
+        try:
+            firstValue = result.index("{")
+            lastValue = len(result) - \
+                result[::-1].index("}")
+            jsonString = result[firstValue:lastValue]
+
+            reply = json.loads(jsonString)
+            reply =reply['thread']
+        except Exception as e:
+            
+            reply = result
+    try:
+        reply = json.loads(reply)
+        result =reply['thread']
+    except Exception as e:
+        result = reply
+
+    print(result)
+
+    return Response({"thread":str(result)})
 
 @api_view(['POST', 'GET'])
 def reply_gen(request):
