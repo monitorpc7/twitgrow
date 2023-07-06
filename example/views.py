@@ -95,7 +95,7 @@ def thread_gen(request):
     initial = '''
     I want you to act like an experienced social media expert with the ability to
         write highly captivating Twitter threads that people would love reading furthur. I want you to help me write a Twitter
-        thread about this topic: {} . 
+        long thread with more content about this topic: {} . 
     '''.format(topic)
 
 
