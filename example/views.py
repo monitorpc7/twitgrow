@@ -29,8 +29,8 @@ passwd = 'Passw0rd!'
 
 @api_view(['POST', 'GET'])
 def tweet_gen(request):
-    sign = Login(email, passwd)
-    cookies = sign.login()
+    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    bard = Bard(token=token)
     
     topic = request.data['topic']
     tone = request.data['tone']
@@ -39,9 +39,7 @@ def tweet_gen(request):
     {}
     '''.format(topic)
 
-    # Create a ChatBot
-    chatbot = hugchat.ChatBot(cookies=cookies.get_dict())  # or cookie_path="usercookies/<email>.json"
-    result = chatbot.chat("generate a engaging and more human like maximum 200-word tweet with emoji and indentations on each line for the following topic present after 'Topic :' for the tone " +tone+'''. 
+    prompt ="I want you to act as an expert social media marketer and a expert copywriter.you have a goal on growing your audience. with that, generate a engaging and more human like maximum 200-word tweet with emoji and indentations on each line for the following topic present after 'Topic :' for the tone " +tone+'''. 
             For easy processing and consistency, format your response as a JSON object with key "tweet" which has to have the generated 
         tweet on the given topic and in that json also include a key called "tone" that has the tone of that generated tweet. the format of the json 
         response should the one present after "Format :".
@@ -53,7 +51,8 @@ def tweet_gen(request):
             }    
         
 
-            Topic : '''+topic)
+            Topic : '''+topic
+    result = bard.get_answer(prompt)['content']
 
     try:
         reply = json.loads(result)
@@ -156,7 +155,7 @@ def reply_gen(request):
     {}
     '''.format(tweet)
 
-    prompt  = '''generate a {} and more human like 30-word reply  with emoji to express emotions if possible  for the following tweet present after "Tweet :". 
+    prompt  = '''I want you to act as an expert social media marketer and a expert copywriter.you have a goal on growing your audience. with that, generate a {} and more human like 30-word reply  with emoji to express emotions if possible  for the following tweet present after "Tweet :". 
     For easy processing and consistency, format your response as a JSON object with "reply" and the content of each as the keys has to be the reply.
 
     Tweet : {}
@@ -190,13 +189,55 @@ def reply_gen(request):
 
 @api_view(['POST', 'GET'])
 def quoted_retweet_gen(request):
-    now = datetime.now()  
-    return Response({"time":str(now)})
+    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    bard = Bard(token=token)    
+    
+    tweet = request.data['tweet']
+    tone = request.data['tone']
+
+    print(tweet)
+    print(tone)
+    
+    tweet = '''
+    {}
+    '''.format(tweet)
+
+    prompt  = '''I want you to act as an expert social media marketer and a expert copywriter.you have a goal on growing your audience. with that, generate a {} and more human like 30-word quoted retweet reply with emoji to express emotions if possible  for the following tweet present after "Tweet :". 
+    For easy processing and consistency, format your response as a JSON object with "reply" and the content of each as the keys has to be the reply.
+
+    Tweet : {}
+    '''.format(tone,tweet)
+    result = bard.get_answer(prompt)['content']
+    #print(result)
+    try:
+        reply = json.loads(result)
+        reply =reply['reply']
+    except Exception as e:
+        try:
+            firstValue = result.index("{")
+            lastValue = len(result) - \
+                result[::-1].index("}")
+            jsonString = result[firstValue:lastValue]
+
+            reply = json.loads(jsonString)
+            reply =reply['reply']
+        except Exception as e:
+            
+            reply = result
+    try:
+        reply = json.loads(reply)
+        result =reply['reply']
+    except Exception as e:
+        result = reply
+
+    print(result)
+
+    return Response({"reply":str(result)})
 
 @api_view(['POST', 'GET'])
-def tweet_rewrite(request):
-    sign = Login(email, passwd)
-    cookies = sign.login()
+def tweet_rewrite(request):   
+    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    bard = Bard(token=token)
     
     tweet = request.data['tweet']    
     print(tweet)    
@@ -206,8 +247,7 @@ def tweet_rewrite(request):
     '''.format(tweet)
 
     # Create a ChatBot
-    chatbot = hugchat.ChatBot(cookies=cookies.get_dict())  # or cookie_path="usercookies/<email>.json"
-    result = chatbot.chat('''rewrite with the engaging indentations for the following tweet present after "Tweet :". 
+    prompt='''I want you to act as an expert social media marketer and a expert copywriter.you have a goal on growing your audience. with that, rewrite with the engaging indentations for the following tweet present after "Tweet :". 
     For easy processing and consistency, format your response as a JSON object with key "tweet" which has to have the rewritten version 
     of the given tweet and in that json also include a key called "tone" that has the tone of this tweet. the format of the json 
     response should the one present after "Format :".
@@ -218,8 +258,10 @@ def tweet_rewrite(request):
         'tone':[tone of the tweet]
         }    
 
-        Tweet :'''+tweet)
+        Tweet :'''+tweet
 
+    result = bard.get_answer(prompt)['content']
+    print(result)
     try:
         reply = json.loads(result)
         reply =reply['tweet']
@@ -245,4 +287,62 @@ def tweet_rewrite(request):
 
     return Response({"tweet":str(result)})
 
+@api_view(['POST', 'GET'])
+def topic_suggestion(request):   
+    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    bard = Bard(token=token)
+    
+    niche = request.data['niche']    
+    print(niche)    
+    
+    niche = '''
+    {}
+    '''.format(niche)
 
+    # Create a ChatBot
+    prompt='''I want you to act as an expert social media marketer and a expert copywriter.you have a goal on growing your audience. 
+    with that in mind, give me 10 trending and more engaging topics to post on twitter for the following niche present after "Niche :". 
+    For easy processing and consistency, format your response as a JSON object with key "topics_list" which has to have the topics list
+    of the given niche .for each time giveme different topics instead of previous ones. the format of the json response should the one present after "Format :".
+
+        Format: 
+        {
+        'topics_list': [topics_list]        
+        }    
+
+        Niche :'''+niche
+
+    result = bard.get_answer(prompt)['content']
+    #print(result)
+    try:
+        reply = json.loads(result)
+        reply =reply['topics_list']
+    except Exception as e:
+        try:
+            firstValue = result.index("{")
+            lastValue = len(result) - \
+                result[::-1].index("}")
+            jsonString = result[firstValue:lastValue]
+
+            reply = json.loads(jsonString)
+            reply =reply['topics_list']
+        except Exception as e:
+            
+            reply = result
+    try:
+        reply = json.loads(reply)
+        result =reply['topics_list']
+    except Exception as e:
+        result = reply
+
+    try:
+        topics_list = ""
+        for element in list(result):
+            topics_list += str(element) + "\n"
+    except Exception as e:
+        topics_list = result
+
+
+    print(topics_list)
+
+    return Response({"topics_list":str(topics_list)})

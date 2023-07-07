@@ -11,4 +11,5 @@ urlpatterns = [
     path('reply/', views.reply_gen),
     path('quote/', views.quoted_retweet_gen),
     path('rewrite/', views.tweet_rewrite),
+    path('suggest/', views.topic_suggestion),
 ]
