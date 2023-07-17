@@ -29,7 +29,7 @@ passwd = 'Passw0rd!'
 
 @api_view(['POST', 'GET'])
 def tweet_gen(request):
-    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    token = 'Yggwf6og3zgFs6pESPR-y413Vt_fqk8kPwZmSqf72VQOf2ZfHk5gLXdPBxinDfQ5qAQ6RQ.'
     bard = Bard(token=token)
     
     topic = request.data['topic']
@@ -81,7 +81,7 @@ def tweet_gen(request):
 
 @api_view(['POST', 'GET'])
 def thread_gen(request):
-    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    token = 'Yggwf6og3zgFs6pESPR-y413Vt_fqk8kPwZmSqf72VQOf2ZfHk5gLXdPBxinDfQ5qAQ6RQ.'
     bard = Bard(token=token)
     
     topic = request.data['topic']
@@ -142,7 +142,7 @@ def thread_gen(request):
 
 @api_view(['POST', 'GET'])
 def reply_gen(request):
-    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    token = 'Yggwf6og3zgFs6pESPR-y413Vt_fqk8kPwZmSqf72VQOf2ZfHk5gLXdPBxinDfQ5qAQ6RQ.'
     bard = Bard(token=token)    
     
     tweet = request.data['tweet']
@@ -189,7 +189,7 @@ def reply_gen(request):
 
 @api_view(['POST', 'GET'])
 def quoted_retweet_gen(request):
-    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    token = 'Yggwf6og3zgFs6pESPR-y413Vt_fqk8kPwZmSqf72VQOf2ZfHk5gLXdPBxinDfQ5qAQ6RQ.'
     bard = Bard(token=token)    
     
     tweet = request.data['tweet']
@@ -236,7 +236,7 @@ def quoted_retweet_gen(request):
 
 @api_view(['POST', 'GET'])
 def tweet_rewrite(request):   
-    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    token = 'Yggwf6og3zgFs6pESPR-y413Vt_fqk8kPwZmSqf72VQOf2ZfHk5gLXdPBxinDfQ5qAQ6RQ.'
     bard = Bard(token=token)
     
     tweet = request.data['tweet']    
@@ -289,7 +289,7 @@ def tweet_rewrite(request):
 
 @api_view(['POST', 'GET'])
 def topic_suggestion(request):   
-    token = 'XQgwfwXz8B_1tXS3EXtAkpxUg4QCkHIDWUDhGWomfzfOvypO6ACsT2bpr_ARFQODHerNQg.'
+    token = 'Yggwf6og3zgFs6pESPR-y413Vt_fqk8kPwZmSqf72VQOf2ZfHk5gLXdPBxinDfQ5qAQ6RQ.'
     bard = Bard(token=token)
     
     niche = request.data['niche']    
